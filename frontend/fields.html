@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <title>Yo'nalishlar</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(to bottom, #1e3c72, #000);
+            color: white;
+            text-align: center;
+            position: relative;
+            overflow: hidden; /* Prevent scrollbars due to snowfall */
+        }
+        .container {
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+            color: #333;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .field-button {
+            background-color: #007bff;
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .field-button:hover {
+            background-color: #0056b3;
+        }
+        .back-button {
+            background-color: #6c757d;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .back-button:hover {
+            background-color: #5a6268;
+        }
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* Snowflake style */
+        .snowflake {
+            position: fixed;
+            top: -10px;
+            background-color: white;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            opacity: 0.8;
+            pointer-events: none; /* Allow clicks to go through the snowflakes */
+            z-index: 1;
+            animation: fall linear infinite;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(100vh);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Yo'nalish Tanlang</h1>
+        <div class="grid">
+            <button onclick="navigateTo('islomshunoslik.html', 'Islomshunoslik')" class="field-button">Islomshunoslik</button>
+            <button onclick="navigateTo('dinshunoslik.html', 'Dinshunoslik')" class="field-button">Dinshunoslik</button>
+            <button onclick="navigateTo('tarix.html', 'Tarix')" class="field-button">Tarix</button>
+            <button onclick="navigateTo('lingvistika.html', 'Lingvistika')" class="field-button">Lingvistika</button>
+            <button onclick="navigateTo('matn.html', 'Matnshunoslik')" class="field-button">Matnshunoslik</button>
+            <button onclick="navigateTo('xalqaro.html', 'Xalqaro munosabatlar')" class="field-button">Xalqaro munosabatlar</button>
+            <button onclick="navigateTo('psixologiya.html', 'Psixologiya')" class="field-button">Psixologiya</button>
+            <button onclick="navigateTo('iqtisod.html', 'Iqtisodiyot')" class="field-button">Iqtisodiyot</button>
+            <button onclick="navigateTo('tif.html', 'Tashqi iqtisodiyot')" class="field-button">Tashqi iqtisodiyot</button>
+            <button onclick="navigateTo('huquq.html', 'Islom huquqi')" class="field-button">Islom huquqi</button>
+            <button onclick="navigateTo('axborot.html', 'Axborot xavfsizligi')" class="field-button">Axborot xavfsizligi</button>
+            <button onclick="navigateTo('turizm.html', 'Turizm')" class="field-button">Turizm</button>
+        </div>
+        <button onclick="window.location.href='mainpage.html'" class="back-button">Kunni xato kiritibman, ortga</button>
+    </div>
+
+    <script>
+        function navigateTo(url, fieldName) {
+            // Store the field name in localStorage
+            localStorage.setItem('selectedField', fieldName);
+
+            // Redirect to the specified URL
+            window.location.href = url;
+        }
+
+        // Create snowflakes
+        function createSnowflake() {
+            const snowflake = document.createElement('div');
+            snowflake.classList.add('snowflake');
+            document.body.appendChild(snowflake);
+
+            // Randomize starting position and animation duration
+            snowflake.style.left = Math.random() * window.innerWidth + 'px';
+            snowflake.style.animationDuration = (Math.random() * 3 + 2) + 's'; // Between 2s and 5s
+            snowflake.style.width = snowflake.style.height = Math.random() * 5 + 5 + 'px'; // Random size between 5px and 10px
+
+            // Remove snowflake after it falls
+            snowflake.addEventListener('animationend', () => {
+                snowflake.remove();
+            });
+        }
+
+        // Generate snowflakes every 100 milliseconds
+        setInterval(createSnowflake, 100);
+    </script>
+</body>
+</html>

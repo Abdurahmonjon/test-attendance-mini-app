@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <title>Magistrlar Davomati</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: linear-gradient(to bottom, #1e3c72, #000);
+            overflow: hidden; /* Prevent scrollbars from appearing */
+            position: relative;
+            color: white;
+        }
+        .container {
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+            width: 400px;
+            text-align: center;
+            z-index: 10;
+            color: #333;
+        }
+        .logo {
+            width: 100px;
+            height: 100px; /* Set height equal to width */
+            margin-bottom: 10px;
+            border-radius: 50%; /* Make it circular */
+            object-fit: cover; /* Ensures the image covers the area without distortion */
+}
+        .university-name {
+            font-size: 1.5em;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #007bff;
+        }
+        h3 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+        input[type="date"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Snowflake Style */
+        .snowflake {
+            position: fixed;
+            top: -10px;
+            background-color: white;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            opacity: 0.8;
+            pointer-events: none; /* Allow clicks to go through the snowflakes */
+            z-index: 1;
+            animation: fall linear infinite;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(100vh);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img src="../images/academy_logo.png" alt="University Logo" class="logo">
+        <div class="university-name">Xalqaro Islom akademiyasi magistrlari</div>
+        <h3>Sana Tanlang</h3>
+        <form id="dateForm">
+            <input
+                type="date"
+                id="dateSelect"
+                required
+                min="2024-12-01"
+                max="2025-12-31"
+            >
+            <button type="submit">Keyingi</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('dateForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const selectedDate = document.getElementById('dateSelect').value;
+
+            try {
+                // Save the date to sessionStorage
+                sessionStorage.setItem('selectedDate', selectedDate);
+
+                // Navigate to fields.html
+                window.location.href = 'fields.html';
+            } catch (err) {
+                console.error('Error:', err);
+                alert('An error occurred. Please try again.');
+            }
+        });
+
+        // Create snowflakes
+        function createSnowflake() {
+            const snowflake = document.createElement('div');
+            snowflake.classList.add('snowflake');
+            document.body.appendChild(snowflake);
+
+            // Randomize starting position and animation duration
+            snowflake.style.left = Math.random() * window.innerWidth + 'px';
+            snowflake.style.animationDuration = (Math.random() * 3 + 2) + 's'; // Between 2s and 5s
+            snowflake.style.width = snowflake.style.height = Math.random() * 5 + 5 + 'px'; // Random size between 5px and 10px
+
+            // Remove snowflake after it falls
+            snowflake.addEventListener('animationend', () => {
+                snowflake.remove();
+            });
+        }
+
+        // Generate snowflakes every 100 milliseconds
+        setInterval(createSnowflake, 100);
+    </script>
+</body>
+</html>

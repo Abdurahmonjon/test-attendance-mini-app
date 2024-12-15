@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <title>Talaba Davomati</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #2c2c2c;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        h1 {
+            text-align: center;
+            color: #f0f0f0;
+        }
+
+        .student-button {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            background-color: #555;
+            color: white;
+            border: 1px solid #444;
+            border-radius: 5px;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .dropdown {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background-color: #444;
+            border: 1px solid #555;
+            border-radius: 5px;
+            width: 100%;
+            z-index: 10;
+        }
+
+        .dropdown button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: #444;
+            border: none;
+            color: white;
+            text-align: left;
+            cursor: pointer;
+        }
+
+        .dropdown button:hover {
+            background-color: #666;
+        }
+
+        .submit-button, .move-back-button {
+            display: inline-block;
+            padding: 10px 20px;
+            margin-top: 20px;
+            background-color: blue;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .move-back-button {
+            background-color: #888;
+        }
+
+        /* Snowfall effect */
+        .snowflake {
+            position: fixed;
+            top: -10px;
+            width: 10px;
+            height: 10px;
+            background-color: white;
+            border-radius: 50%;
+            pointer-events: none;
+            animation: fall linear infinite;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(100vh);
+            }
+        }
+
+        #loading-message {
+            display: none;
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f59e0b;
+            color: black;
+            text-align: center;
+            border: 1px solid #555;
+            border-radius: 5px;
+        }
+
+    </style>
+</head>
+<body>
+    <h2>Dinshunoslik Talabalari</h2>
+
+    <div class="container" id="student-list">
+        <!-- Student buttons will be added here dynamically -->
+    </div>
+
+    <div id="loading-message">Iltimos, kuting... Ma'lumotlar yuborilmoqda.</div>
+
+    <button class="submit-button" onclick="submitData()">Tugatdim, saqlayvering!</button>
+    <button class="move-back-button" onclick="window.location.href='fields.html'">Ortga Qaytish</button>
+
+    <script>
+    const studentStatuses = {};
+
+    // Fetch student names from the JSON file
+    fetch('students/dinshunoslik.json')
+        .then(response => response.json())
+        .then(data => {
+            const studentListDiv = document.getElementById('student-list');
+
+            // Create a student button for each student in the JSON
+            data.forEach(student => {
+                const studentButton = document.createElement('div');
+                studentButton.classList.add('student-button');
+                studentButton.setAttribute('data-id', student.name.toLowerCase().replace(/\s+/g, '-')); // Unique ID for each student
+
+                studentButton.innerHTML = `
+                    ${student.name}
+                    <div class="dropdown">
+                        <button onclick="selectStatus(event, this, 'keldi')">Keldi</button>
+                        <button onclick="selectStatus(event, this, 'kelmadi')">Kelmadi</button>
+                        <button onclick="selectStatus(event, this, 'sababli')">Sababli</button>
+                    </div>
+                `;
+
+                studentButton.onclick = function() { toggleDropdown(this); };
+                studentListDiv.appendChild(studentButton);
+            });
+        })
+        .catch(error => console.error('Error fetching student data:', error));
+
+    function toggleDropdown(button) {
+        // Close all other dropdowns
+        const allDropdowns = document.querySelectorAll('.dropdown');
+        allDropdowns.forEach(dropdown => {
+            if (dropdown.parentElement !== button) {
+                dropdown.style.display = 'none';
+            }
+        });
+
+        // Toggle the dropdown for the clicked button
+        const dropdown = button.querySelector('.dropdown');
+        dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+    }
+
+    function selectStatus(event, option, status) {
+        event.stopPropagation();
+
+        const button = option.closest('.student-button');
+        const studentId = button.getAttribute('data-id');
+        const studentName = button.childNodes[0].textContent.trim();
+
+        // Save the status
+        studentStatuses[studentId] = { name: studentName, status: status };
+
+        // Update button styles based on status
+        switch (status) {
+            case 'keldi':
+                button.style.backgroundColor = 'green';
+                break;
+            case 'kelmadi':
+                button.style.backgroundColor = 'red';
+                break;
+            case 'sababli':
+                button.style.backgroundColor = 'yellow';
+                break;
+            default:
+                button.style.backgroundColor = '#555';
+        }
+
+        // Close the dropdown
+        button.querySelector('.dropdown').style.display = 'none';
+    }
+
+    function submitData() {
+        // Show loading message and disable the submit button
+        const loadingMessage = document.getElementById('loading-message');
+        loadingMessage.style.display = 'block';
+
+        const submitButton = document.querySelector('.submit-button');
+        submitButton.disabled = true;
+
+        console.log("Submitting Data:", studentStatuses);
+        const selectedField = localStorage.getItem('selectedField');
+        const dataToSend = {
+            date: sessionStorage.getItem('selectedDate'),
+            field: selectedField,
+        };
+
+        Object.keys(studentStatuses).forEach(studentId => {
+            dataToSend[studentId] = {
+                name: studentStatuses[studentId].name,
+                status: studentStatuses[studentId].status,
+            };
+        });
+
+        fetch('https://attendance-bot-server.onrender.com/submit-attendance', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(dataToSend),
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Success:', data);
+            alert('Attendance submitted successfully!');
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Failed to submit attendance.');
+        })
+        .finally(() => {
+            // Hide loading message and re-enable the submit button
+            loadingMessage.style.display = 'none';
+            submitButton.disabled = false;
+        });
+    }
+
+    // Snowfall effect
+    function createSnowflake() {
+        const snowflake = document.createElement('div');
+        snowflake.classList.add('snowflake');
+        snowflake.style.left = `${Math.random() * 100}vw`;
+        snowflake.style.animationDuration = `${Math.random() * 3 + 2}s`;
+        document.body.appendChild(snowflake);
+
+        setTimeout(() => {
+            snowflake.remove();
+        }, 5000);
+    }
+
+    setInterval(createSnowflake, 100);
+</script>
+
+</body>
+</html>

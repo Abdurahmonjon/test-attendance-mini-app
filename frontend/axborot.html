@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <title>Talaba Davomati</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #0d1117;
+            color: white;
+            position: relative;
+            overflow: hidden;
+            min-height: 100vh;
+        }
+
+        .container {
+            background-color: #1f2937;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+        }
+
+        .student-button {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            background-color: #374151;
+            color: white;
+            border: 1px solid #555;
+            border-radius: 5px;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .dropdown {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background-color: #374151;
+            border: 1px solid #555;
+            border-radius: 5px;
+            width: 100%;
+            z-index: 10;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+        }
+
+        .dropdown button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: #374151;
+            color: white;
+            border: none;
+            text-align: left;
+            cursor: pointer;
+        }
+
+        .dropdown button:hover {
+            background-color: #4b5563;
+        }
+
+        #loading-message {
+            display: none;
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f59e0b;
+            color: black;
+            text-align: center;
+            border: 1px solid #555;
+            border-radius: 5px;
+        }
+
+        /* Snowfall effect */
+        .snowflake {
+            position: fixed;
+            top: -10px;
+            background: white;
+            border-radius: 50%;
+            width: 5px;
+            height: 5px;
+            opacity: 0.8;
+            pointer-events: none;
+            animation: fall linear infinite;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(100vh);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Axborot Xavfsizligi Talabalari</h1>
+
+        <div class="student-button" onclick="toggleDropdown(this)" data-id="obidinov-abdurahmonjon">
+            Obidinov Abdurahmonjon
+            <div class="dropdown">
+                <button onclick="selectStatus(event, this, 'keldi')">Keldi</button>
+                <button onclick="selectStatus(event, this, 'kelmadi')">Kelmadi</button>
+                <button onclick="selectStatus(event, this, 'sababli')">Sababli</button>
+            </div>
+        </div>
+
+        <div class="student-button" onclick="toggleDropdown(this)" data-id="rustamova-munavvar">
+            Rustamova Munavvar
+            <div class="dropdown">
+                <button onclick="selectStatus(event, this, 'keldi')">Keldi</button>
+                <button onclick="selectStatus(event, this, 'kelmadi')">Kelmadi</button>
+                <button onclick="selectStatus(event, this, 'sababli')">Sababli</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="loading-message">Iltimos, kuting... Ma'lumotlar yuborilmoqda.</div>
+
+    <button id="submit-button" onclick="submitData()" style="margin-top: 20px; padding: 10px 20px; background-color: blue; color: white; border: none; border-radius: 10px; cursor: pointer;">
+        Tugatdim, saqlayvering!
+    </button>
+
+    <button onclick="goBack()" style="margin-top: 10px; padding: 10px 20px; background-color: gray; color: white; border: none; border-radius: 10px; cursor: pointer;">
+        Yana nimadir xato, ortga
+    </button>
+
+    <script>
+        // Snowfall effect
+        function createSnowflake() {
+            const snowflake = document.createElement('div');
+            snowflake.classList.add('snowflake');
+            document.body.appendChild(snowflake);
+
+            // Randomize the horizontal position and animation duration
+            snowflake.style.left = Math.random() * window.innerWidth + 'px';
+            snowflake.style.animationDuration = (Math.random() * 3 + 2) + 's';
+
+            // Remove the snowflake when it falls out of view
+            snowflake.addEventListener('animationend', () => {
+                snowflake.remove();
+            });
+        }
+
+        setInterval(createSnowflake, 100);
+
+        // Existing JavaScript functions
+        const studentStatuses = {};
+
+        function toggleDropdown(button) {
+            const allDropdowns = document.querySelectorAll('.dropdown');
+            allDropdowns.forEach(dropdown => {
+                if (dropdown.parentElement !== button) {
+                    dropdown.style.display = 'none';
+                }
+            });
+            const dropdown = button.querySelector('.dropdown');
+            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+        }
+
+        function selectStatus(event, option, status) {
+            event.stopPropagation();
+            const button = option.closest('.student-button');
+            const studentId = button.getAttribute('data-id');
+            const studentName = button.childNodes[0].textContent.trim();
+            studentStatuses[studentId] = { name: studentName, status: status };
+
+            switch (status) {
+                case 'keldi':
+                    button.style.backgroundColor = 'green';
+                    button.style.color = 'white';
+                    break;
+                case 'kelmadi':
+                    button.style.backgroundColor = 'red';
+                    button.style.color = 'white';
+                    break;
+                case 'sababli':
+                    button.style.backgroundColor = 'yellow';
+                    button.style.color = 'black';
+                    break;
+                default:
+                    button.style.backgroundColor = '#374151';
+                    button.style.color = 'white';
+            }
+
+            const dropdown = button.querySelector('.dropdown');
+            dropdown.style.display = 'none';
+        }
+
+        function submitData() {
+    const submitButton = document.getElementById('submit-button');
+    const loadingMessage = document.getElementById('loading-message');
+    submitButton.disabled = true;
+    loadingMessage.style.display = 'block';
+
+    const selectedField = localStorage.getItem('selectedField');
+    console.log(selectedField);
+
+    // Prepare the data to be sent to the server
+    const dataToSend = {
+        date: sessionStorage.getItem('selectedDate'),
+        field: selectedField,
+    };
+
+    Object.keys(studentStatuses).forEach(studentId => {
+        dataToSend[studentId] = {
+            name: studentStatuses[studentId].name,
+            status: studentStatuses[studentId].status,
+        };
+    });
+
+    // Send data to the server using fetch
+    fetch('https://attendance-bot-server.onrender.com/submit-attendance', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(dataToSend),
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Success:', data);
+        alert('Attendance submitted successfully!');
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Failed to submit attendance.');
+    })
+    .finally(() => {
+        submitButton.disabled = false;
+        loadingMessage.style.display = 'none';
+    });
+}
+
+
+        function goBack() {
+            window.location.href = 'fields.html';
+        }
+
+        document.addEventListener('click', function (event) {
+            const dropdowns = document.querySelectorAll('.dropdown');
+            dropdowns.forEach(dropdown => {
+                if (!dropdown.contains(event.target) && !dropdown.parentElement.contains(event.target)) {
+                    dropdown.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
