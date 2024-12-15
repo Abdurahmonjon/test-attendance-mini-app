@@ -119,18 +119,22 @@
             }
         });
 
-        // Snowfall effect
-    function createSnowflake() {
-        const snowflake = document.createElement('div');
-        snowflake.classList.add('snowflake');
-        snowflake.style.left = `${Math.random() * 100}vw`;
-        snowflake.style.animationDuration = `${Math.random() * 3 + 2}s`;
-        document.body.appendChild(snowflake);
+        // Create snowflakes
+        function createSnowflake() {
+            const snowflake = document.createElement('div');
+            snowflake.classList.add('snowflake');
+            document.body.appendChild(snowflake);
 
-        setTimeout(() => {
-            snowflake.remove();
-        }, 5000);
-    }
+            // Randomize starting position and animation duration
+            snowflake.style.left = Math.random() * window.innerWidth + 'px';
+            snowflake.style.animationDuration = (Math.random() * 3 + 2) + 's'; // Between 2s and 5s
+            snowflake.style.width = snowflake.style.height = Math.random() * 5 + 5 + 'px'; // Random size between 5px and 10px
+
+            // Remove snowflake after it falls
+            snowflake.addEventListener('animationend', () => {
+                snowflake.remove();
+            });
+        }
 
         // Generate snowflakes every 100 milliseconds
         setInterval(createSnowflake, 100);
