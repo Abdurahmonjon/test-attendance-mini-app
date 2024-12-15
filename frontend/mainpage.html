@@ -2,7 +2,6 @@
 <html lang="uz">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Magistrlar Davomati</title>
     <style>
         body {
@@ -13,7 +12,7 @@
             height: 100vh;
             margin: 0;
             background: linear-gradient(to bottom, #1e3c72, #000);
-            overflow: hidden;
+            overflow: hidden; /* Prevent scrollbars from appearing */
             position: relative;
             color: white;
         }
@@ -29,10 +28,10 @@
         }
         .logo {
             width: 100px;
-            height: 100px;
+            height: 100px; /* Set height equal to width */
             margin-bottom: 10px;
-            border-radius: 50%;
-            object-fit: cover;
+            border-radius: 50%; /* Make it circular */
+            object-fit: cover; /* Ensures the image covers the area without distortion */
         }
         .university-name {
             font-size: 1.5em;
@@ -65,16 +64,15 @@
             background-color: #0056b3;
         }
 
+        /* Snowflake Style */
         .snowflake {
             position: fixed;
             top: -10px;
+            width: 10px;
+            height: 10px;
             background-color: white;
-            width: 8px;
-            height: 8px;
             border-radius: 50%;
-            opacity: 0.8;
             pointer-events: none;
-            z-index: 9999; /* Ensure it's on top of all other content */
             animation: fall linear infinite;
         }
 
@@ -84,6 +82,7 @@
             }
         }
 
+        /* Snowflake adjustments for mobile responsiveness */
         @media (max-width: 600px) {
             .snowflake {
                 width: 6px;
@@ -98,17 +97,35 @@
         <div class="university-name">Xalqaro Islom akademiyasi magistrlari</div>
         <h3>Sana Tanlang</h3>
         <form id="dateForm">
-            <input type="date" id="dateSelect" required min="2024-12-01" max="2025-12-31">
+            <input
+                type="date"
+                id="dateSelect"
+                required
+                min="2024-12-01"
+                max="2025-12-31"
+            >
             <button type="submit">Keyingi</button>
         </form>
     </div>
 
     <script>
-        window.addEventListener('load', function() {
-            // Generate snowflakes every 100 milliseconds
-            setInterval(createSnowflake, 100);
+        document.getElementById('dateForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const selectedDate = document.getElementById('dateSelect').value;
+
+            try {
+                // Save the date to sessionStorage
+                sessionStorage.setItem('selectedDate', selectedDate);
+
+                // Navigate to fields.html
+                window.location.href = 'fields.html';
+            } catch (err) {
+                console.error('Error:', err);
+                alert('An error occurred. Please try again.');
+            }
         });
 
+        // Create snowflakes
         function createSnowflake() {
             const snowflake = document.createElement('div');
             snowflake.classList.add('snowflake');
@@ -125,12 +142,8 @@
             });
         }
 
-        document.getElementById('dateForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const selectedDate = document.getElementById('dateSelect').value;
-            sessionStorage.setItem('selectedDate', selectedDate);
-            window.location.href = 'fields.html';
-        });
+        // Generate snowflakes every 50 milliseconds
+        setInterval(createSnowflake, 50);
     </script>
 </body>
 </html>
