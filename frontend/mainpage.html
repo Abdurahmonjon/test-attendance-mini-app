@@ -63,32 +63,6 @@
         button:hover {
             background-color: #0056b3;
         }
-
-        /* Snowflake Style */
-        .snowflake {
-            position: fixed;
-            top: -10px;
-            width: 10px;
-            height: 10px;
-            background-color: white;
-            border-radius: 50%;
-            pointer-events: none;
-            animation: fall linear infinite;
-        }
-
-        @keyframes fall {
-            to {
-                transform: translateY(100vh);
-            }
-        }
-
-        /* Snowflake adjustments for mobile responsiveness */
-        @media (max-width: 600px) {
-            .snowflake {
-                width: 6px;
-                height: 6px;
-            }
-        }
     </style>
 </head>
 <body>
@@ -124,26 +98,6 @@
                 alert('An error occurred. Please try again.');
             }
         });
-
-        // Create snowflakes
-        function createSnowflake() {
-            const snowflake = document.createElement('div');
-            snowflake.classList.add('snowflake');
-            document.body.appendChild(snowflake);
-
-            // Randomize starting position and animation duration
-            snowflake.style.left = Math.random() * window.innerWidth + 'px';
-            snowflake.style.animationDuration = (Math.random() * 3 + 2) + 's'; // Between 2s and 5s
-            snowflake.style.width = snowflake.style.height = Math.random() * 5 + 5 + 'px'; // Random size between 5px and 10px
-
-            // Remove snowflake after it falls
-            snowflake.addEventListener('animationend', () => {
-                snowflake.remove();
-            });
-        }
-
-        // Generate snowflakes every 50 milliseconds
-        setInterval(createSnowflake, 50);
     </script>
 </body>
 </html>

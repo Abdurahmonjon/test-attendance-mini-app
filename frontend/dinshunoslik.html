@@ -86,24 +86,6 @@
             background-color: gray;
         }
 
-        /* Snowfall effect */
-        .snowflake {
-            position: fixed;
-            top: -10px;
-            width: 10px;
-            height: 10px;
-            background-color: white;
-            border-radius: 50%;
-            pointer-events: none;
-            animation: fall linear infinite;
-        }
-
-        @keyframes fall {
-            to {
-                transform: translateY(100vh);
-            }
-        }
-
         #loading-message {
             display: none;
             margin-top: 20px;
@@ -247,22 +229,7 @@
             submitButton.disabled = false;
         });
     }
-
-    // Snowfall effect
-    function createSnowflake() {
-        const snowflake = document.createElement('div');
-        snowflake.classList.add('snowflake');
-        snowflake.style.left = `${Math.random() * 100}vw`;
-        snowflake.style.animationDuration = `${Math.random() * 3 + 2}s`;
-        document.body.appendChild(snowflake);
-
-        setTimeout(() => {
-            snowflake.remove();
-        }, 5000);
-    }
-
-    setInterval(createSnowflake, 100);
-</script>
+    </script>
 
 </body>
 </html>

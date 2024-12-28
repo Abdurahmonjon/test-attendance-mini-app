@@ -13,7 +13,7 @@
             color: white;
             text-align: center;
             position: relative;
-            overflow: hidden; /* Prevent scrollbars due to snowfall */
+            overflow: hidden;
         }
         .container {
             background-color: rgba(255, 255, 255, 0.9);
@@ -55,34 +55,6 @@
             text-decoration: none;
             color: inherit;
         }
-
-        /* Snowflake style */
-        .snowflake {
-            position: fixed;
-            top: -10px;
-            background-color: white;
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            opacity: 0.8;
-            pointer-events: none; /* Allow clicks to go through the snowflakes */
-            z-index: 1;
-            animation: fall linear infinite;
-        }
-
-        @keyframes fall {
-            to {
-                transform: translateY(100vh);
-            }
-        }
-
-        /* Snowflake adjustments for mobile responsiveness */
-        @media (max-width: 600px) {
-            .snowflake {
-                width: 8px;
-                height: 8px;
-            }
-        }
     </style>
 </head>
 <body>
@@ -113,27 +85,6 @@
             // Redirect to the specified URL
             window.location.href = url;
         }
-
-        // Create snowflakes
-        function createSnowflake() {
-            const snowflake = document.createElement('div');
-            snowflake.classList.add('snowflake');
-            document.body.appendChild(snowflake);
-
-            // Randomize starting position and animation duration
-            snowflake.style.left = Math.random() * window.innerWidth + 'px'; // Random horizontal position
-            snowflake.style.animationDuration = (Math.random() * 3 + 2) + 's'; // Between 2s and 5s fall duration
-            snowflake.style.animationTimingFunction = 'linear'; // Smooth continuous fall
-            snowflake.style.width = snowflake.style.height = (Math.random() * 5 + 5) + 'px'; // Random size between 5px and 10px
-
-            // Remove snowflake after it falls
-            snowflake.addEventListener('animationend', () => {
-                snowflake.remove();
-            });
-        }
-
-        // Generate snowflakes every 100 milliseconds
-        setInterval(createSnowflake, 100);
     </script>
 </body>
 </html>
