@@ -5,6 +5,7 @@ import os
 import threading
 import time
 import requests
+import asyncio
 
 # Environment variables for configuration
 TOKEN = os.getenv("TELEGRAM_BOT_TOKEN", "7309821581:AAHodQcZRGFlAYbPPbkd6_NBgEzqZr--Yi4")
@@ -32,13 +33,13 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 tg_app.add_handler(CommandHandler("start", start))
 
 @app.route("/", methods=["GET", "POST"])
-def webhook():  # Remove async here
+def webhook():
     if request.method == "POST":
         data = request.get_json(force=True)
         print("Received data:", data)
-        # Process the incoming update
+        # Process the incoming update using asyncio
         update = Update.de_json(data, tg_app.bot)
-        tg_app.process_update(update)  # Correct way to process the update
+        asyncio.run(tg_app.process_update(update))  # Use asyncio.run to await process_update
         return "OK", 200
     return "Hello, I am your Telegram bot!", 200
 
