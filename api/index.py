@@ -14,6 +14,7 @@ app = Flask(__name__)
 tg_app = ApplicationBuilder().token(TOKEN).build()
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    print("Start command triggered!")
     keyboard = [
         [InlineKeyboardButton("Dasturchaga kirish", web_app={"url": "https://abdurahmonjon.github.io/test-attendance-mini-app/frontend/mainpage.html"})]
     ]
@@ -29,6 +30,7 @@ tg_app.add_handler(CommandHandler("start", start))
 def webhook():
     if request.method == "POST":
         data = request.get_json(force=True)
+        print("Received data:", data)
         tg_app.update_queue.put(Update.de_json(data, tg_app.bot))
         return "OK", 200
     return "Hello, I am your Telegram bot!", 200
