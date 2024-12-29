@@ -1,18 +1,7 @@
 {
-  "version": 2,
-  "builds": [
-    {
-       "src": "api/index.py",
-      "use": "@vercel/python",
-      "config": {
-        "pythonVersion": "3.9"
-      }
+  "functions": {
+    "api/ping_render.py": {
+      "schedule": "every 10 minutes"
     }
-  ],
-  "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "api/index.py"
-    }
-  ]
+  }
 }
