@@ -18,7 +18,7 @@ app = Flask(__name__)
 tg_app = ApplicationBuilder().token(TOKEN).build()
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    print("Start command triggered!")
+    print("Start command triggered!")  # Log to confirm the start command is reached
     keyboard = [
         [InlineKeyboardButton("Dasturchaga kirish", web_app={"url": "https://abdurahmonjon.github.io/test-attendance-mini-app/frontend/mainpage.html"})]
     ]
@@ -26,6 +26,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "Mini App`ni ochish uchun pastdagi tugmachani bosing",
         reply_markup=InlineKeyboardMarkup(keyboard),
     )
+    print("Message sent!")  # Confirm message sending
 
 # Add Telegram handlers
 tg_app.add_handler(CommandHandler("start", start))
