@@ -5,7 +5,7 @@ import os
 
 # Environment variables for configuration
 TOKEN = os.getenv("TELEGRAM_BOT_TOKEN", "7309821581:AAHodQcZRGFlAYbPPbkd6_NBgEzqZr--Yi4")
-WEBHOOK_URL = os.getenv("WEBHOOK_URL")  # Vercel will provide this during deployment
+WEBHOOK_URL = os.getenv("WEBHOOK_URL", "https://test-attendance-mini-app.vercel.app/")  # Vercel will provide this during deployment
 
 # Flask app for Vercel
 app = Flask(__name__)
