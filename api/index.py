@@ -32,11 +32,13 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 tg_app.add_handler(CommandHandler("start", start))
 
 @app.route("/", methods=["GET", "POST"])
-def webhook():
+async def webhook():  # Make the route async
     if request.method == "POST":
         data = request.get_json(force=True)
         print("Received data:", data)
-        tg_app.update_queue.put(Update.de_json(data, tg_app.bot))
+        # Process the incoming update
+        update = Update.de_json(data, tg_app.bot)
+        await tg_app.process_update(update)  # Correct way to process the update
         return "OK", 200
     return "Hello, I am your Telegram bot!", 200
 
