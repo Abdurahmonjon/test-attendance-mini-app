@@ -8,7 +8,7 @@ import time
 
 # Constants
 TOKEN = '7309821581:AAHodQcZRGFlAYbPPbkd6_NBgEzqZr--Yi4'
-RENDER_URL = 'https://file-receiver-bot.onrender.com/'
+RENDER_URL = 'https://test-attendance-mini-app.onrender.com'
 
 # Create a Flask app to keep the service alive and bind to a port
 app = Flask(__name__)
